@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  ytapi:
+    build: .
+    container_name: ytapi
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./tokens.json:/app/tokens.json:ro
+      - ./downloads:/app/downloads
+      - ./logs:/app/logs
+      - ./token_backups:/app/token_backups
+    environment:
+      - TOKEN_FILE=/app/tokens.json
+      - LOG_LEVEL=INFO
+      - DEBUG=false
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
