@@ -236,6 +236,7 @@ class ThumbnailsResponse(BaseModel):
 class PlaylistVideoSummary(BaseModel):
     url: str
     video_id: str
+    title: Optional[str] = None
 
 
 class PlaylistInfoResponse(BaseModel):

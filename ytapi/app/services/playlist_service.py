@@ -82,58 +82,106 @@ def get_playlist_info(url: str) -> PlaylistInfoResponse:
     )
 
 
-def get_playlist_videos(url: str, page: int = 1, page_size: int = 50) -> PlaylistVideosResponse:
-    pl = Playlist(url, token_file=_tok())
-    all_urls: List[str] = list(pl.video_urls)
-    start = (page - 1) * page_size
-    end = start + page_size
-    page_urls = all_urls[start:end]
+def _extract_playlist_videos(pl) -> List[PlaylistVideoSummary]:
+    """
+    Parse the playlist's already-fetched initial_data to get (video_id, url, title)
+    triples without making any additional HTTP requests.
+    Falls back to video_urls-only if initial_data parsing fails.
+    """
+    results: List[PlaylistVideoSummary] = []
 
-    videos = []
-    for vu in page_urls:
-        from pytubefix import extract as _ext
-        try:
-            vid = _ext.video_id(vu)
-        except Exception:
-            vid = ""
-        videos.append(PlaylistVideoSummary(url=vu, video_id=vid))
+    def _walk(obj):
+        if isinstance(obj, dict):
+            if "playlistVideoRenderer" in obj:
+                r = obj["playlistVideoRenderer"]
+                vid = r.get("videoId", "")
+                if not vid:
+                    return
+                title: Optional[str] = None
+                try:
+                    title = r["title"]["runs"][0]["text"]
+                except (KeyError, IndexError, TypeError):
+                    try:
+                        title = r["title"]["simpleText"]
+                    except (KeyError, TypeError):
+                        pass
+                results.append(PlaylistVideoSummary(
+                    url=f"https://www.youtube.com/watch?v={vid}",
+                    video_id=vid,
+                    title=title,
+                ))
+            else:
+                for v in obj.values():
+                    _walk(v)
+        elif isinstance(obj, list):
+            for item in obj:
+                _walk(item)
 
-    return PlaylistVideosResponse(
-        playlist_id=pl.playlist_id,
-        total=len(all_urls),
-        page=page,
-        page_size=page_size,
-        videos=videos,
-    )
-
-
-def _yt_to_result(yt_obj, result_type: str = "video") -> SearchVideoResult:
     try:
-        url = yt_obj.watch_url
-    except Exception:
-        url = getattr(yt_obj, "playlist_url", getattr(yt_obj, "channel_url", ""))
-    try:
-        vid = yt_obj.video_id
-    except Exception:
-        vid = getattr(yt_obj, "playlist_id", getattr(yt_obj, "channel_id", ""))
-
-    title: Optional[str] = None
-    try:
-        title = yt_obj.title
+        _walk(pl.initial_data)
     except Exception:
         pass
 
-    author: Optional[str] = None
-    try:
-        author = yt_obj.author
-    except Exception:
-        try:
-            author = yt_obj.owner
-        except Exception:
+    if not results:
+        # Fallback: use video_urls without titles
+        from pytubefix import extract as _ext
+        for vu in pl.video_urls:
             try:
-                author = yt_obj.channel_name
+                vid = _ext.video_id(vu)
             except Exception:
-                pass
+                vid = ""
+            results.append(PlaylistVideoSummary(url=vu, video_id=vid))
+
+    return results
+
+
+def get_playlist_videos(url: str, page: int = 1, page_size: int = 50) -> PlaylistVideosResponse:
+    pl = Playlist(url, token_file=_tok())
+    all_videos = _extract_playlist_videos(pl)
+    start = (page - 1) * page_size
+    end = start + page_size
+    page_videos = all_videos[start:end]
+
+    return PlaylistVideosResponse(
+        playlist_id=pl.playlist_id,
+        total=len(all_videos),
+        page=page,
+        page_size=page_size,
+        videos=page_videos,
+    )
+
+
+def _safe_get(obj, *attrs):
+    """Try each attribute in order; catches ALL exceptions, not just AttributeError."""
+    for attr in attrs:
+        try:
+            val = getattr(obj, attr)
+            if val:
+                return val
+        except Exception:
+            continue
+    return ""
+
+
+def _yt_to_result(yt_obj, result_type: str = "video") -> SearchVideoResult:
+    """
+    Convert a pytubefix search result object to SearchVideoResult.
+    Uses type-specific attribute access — generic fallback chains cause cross-type
+    property errors (e.g. Channel.playlist_url raises KeyError, not AttributeError).
+    """
+    if result_type == "channel":
+        url = _safe_get(yt_obj, "channel_url")
+        vid = _safe_get(yt_obj, "channel_id")
+    elif result_type == "playlist":
+        url = _safe_get(yt_obj, "playlist_url")
+        vid = _safe_get(yt_obj, "playlist_id")
+    else:
+        # video or short
+        url = _safe_get(yt_obj, "watch_url")
+        vid = _safe_get(yt_obj, "video_id")
+
+    title  = _safe_get(yt_obj, "title", "name") or None
+    author = _safe_get(yt_obj, "author", "owner", "channel_name") or None
 
     return SearchVideoResult(
         video_id=vid,

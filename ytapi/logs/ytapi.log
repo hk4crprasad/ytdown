@@ -39,3 +39,483 @@
 2026-05-14 12:05:08 | INFO     | ytapi.access | POST /merge/start → 200  (1071.5 ms)
 2026-05-14 12:05:08 | INFO     | ytapi.access | GET /merge/progress/dd2bb28eeacf → 200  (2.2 ms)
 2026-05-14 12:05:08 | INFO     | app.services.download_service | Single-thread download: 2461523 bytes
+2026-05-14 12:15:53 | INFO     | ytapi.access | GET /video/info → 200  (4984.0 ms)
+2026-05-14 12:16:29 | INFO     | ytapi.access | GET /video/info → 200  (6080.5 ms)
+2026-05-14 12:16:29 | INFO     | ytapi.access | GET /video/streams → 200  (6080.7 ms)
+2026-05-14 12:16:38 | INFO     | ytapi.access | POST /merge/start → 200  (815.8 ms)
+2026-05-14 12:16:38 | INFO     | ytapi.access | GET /merge/progress/bdf87492c4c2 → 200  (0.8 ms)
+2026-05-14 12:16:38 | INFO     | app.services.download_service | Single-thread download: 972997 bytes
+2026-05-14 12:17:15 | INFO     | ytapi.access | GET /merge/file/bdf87492c4c2 → 200  (3.2 ms)
+2026-05-14 12:18:00 | INFO     | ytapi.access | GET /playlist/info → 200  (1766.8 ms)
+2026-05-14 12:18:00 | INFO     | ytapi.access | GET /playlist/videos → 200  (868.2 ms)
+2026-05-14 12:18:08 | INFO     | ytapi.access | POST /merge/start → 200  (798.0 ms)
+2026-05-14 12:18:08 | INFO     | ytapi.access | GET /merge/progress/d9a66e55d6ff → 200  (0.6 ms)
+2026-05-14 12:18:08 | INFO     | app.services.download_service | Single-thread download: 7710161 bytes
+2026-05-14 12:18:13 | INFO     | ytapi.access | POST /merge/start → 200  (1106.4 ms)
+2026-05-14 12:18:13 | INFO     | ytapi.access | GET /merge/progress/9d90bcecb368 → 200  (0.6 ms)
+2026-05-14 12:19:46 | INFO     | ytapi.access | GET /merge/file/9d90bcecb368 → 200  (0.7 ms)
+2026-05-14 12:20:22 | INFO     | ytapi.access | OPTIONS /merge/job/bdf87492c4c2 → 200  (0.5 ms)
+2026-05-14 12:20:22 | INFO     | ytapi.access | OPTIONS /merge/job/9d90bcecb368 → 200  (0.8 ms)
+2026-05-14 12:20:22 | INFO     | ytapi.access | DELETE /merge/job/bdf87492c4c2 → 200  (4.0 ms)
+2026-05-14 12:20:22 | INFO     | ytapi.access | DELETE /merge/job/9d90bcecb368 → 200  (4.1 ms)
+2026-05-14 12:23:14 | ERROR    | app.core.exceptions | Unhandled exception | path=http://localhost:8000/search?q=java+by+lean+code&page=1
+Traceback (most recent call last):
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 112, in _yt_to_result
+    url = yt_obj.watch_url
+          ^^^^^^^^^^^^^^^^
+AttributeError: 'Channel' object has no attribute 'watch_url'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib64/python3.14/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/middleware/logging_middleware.py", line 17, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/routers/search.py", line 47, in search
+    return search_youtube(
+        query=q,
+    ...<4 lines>...
+        page=page,
+    )
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 211, in search_youtube
+    channels = [_yt_to_result(c, "channel") for c in s.channel]
+                ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 114, in _yt_to_result
+    url = getattr(yt_obj, "playlist_url", getattr(yt_obj, "channel_url", ""))
+  File "/home/hara/Desktop/python/py/pytubefix/contrib/playlist.py", line 96, in playlist_url
+    return f"https://www.youtube.com/playlist?list={self.playlist_id}"
+                                                    ^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/py/pytubefix/contrib/playlist.py", line 87, in playlist_id
+    self._playlist_id = extract.playlist_id(self._input_url)
+                        ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/py/pytubefix/extract.py", line 163, in playlist_id
+    return parse_qs(parsed.query)['list'][0]
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'list'
+2026-05-14 12:23:34 | ERROR    | app.core.exceptions | Unhandled exception | path=http://localhost:8000/search?q=java&page=1
+Traceback (most recent call last):
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 112, in _yt_to_result
+    url = yt_obj.watch_url
+          ^^^^^^^^^^^^^^^^
+AttributeError: 'Channel' object has no attribute 'watch_url'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib64/python3.14/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/middleware/logging_middleware.py", line 17, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/routers/search.py", line 47, in search
+    return search_youtube(
+        query=q,
+    ...<4 lines>...
+        page=page,
+    )
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 211, in search_youtube
+    channels = [_yt_to_result(c, "channel") for c in s.channel]
+                ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 114, in _yt_to_result
+    url = getattr(yt_obj, "playlist_url", getattr(yt_obj, "channel_url", ""))
+  File "/home/hara/Desktop/python/py/pytubefix/contrib/playlist.py", line 96, in playlist_url
+    return f"https://www.youtube.com/playlist?list={self.playlist_id}"
+                                                    ^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/py/pytubefix/contrib/playlist.py", line 87, in playlist_id
+    self._playlist_id = extract.playlist_id(self._input_url)
+                        ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/py/pytubefix/extract.py", line 163, in playlist_id
+    return parse_qs(parsed.query)['list'][0]
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'list'
+2026-05-14 12:54:30 | ERROR    | app.core.exceptions | Unhandled exception | path=http://localhost:8000/search?q=java+learncode&page=1
+Traceback (most recent call last):
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 112, in _yt_to_result
+    url = yt_obj.watch_url
+          ^^^^^^^^^^^^^^^^
+AttributeError: 'Channel' object has no attribute 'watch_url'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib64/python3.14/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/middleware/logging_middleware.py", line 17, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/routers/search.py", line 47, in search
+    return search_youtube(
+        query=q,
+    ...<4 lines>...
+        page=page,
+    )
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 211, in search_youtube
+    channels = [_yt_to_result(c, "channel") for c in s.channel]
+                ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 114, in _yt_to_result
+    url = getattr(yt_obj, "playlist_url", getattr(yt_obj, "channel_url", ""))
+  File "/home/hara/.local/lib/python3.14/site-packages/pytubefix/contrib/playlist.py", line 96, in playlist_url
+    return f"https://www.youtube.com/playlist?list={self.playlist_id}"
+                                                    ^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/pytubefix/contrib/playlist.py", line 87, in playlist_id
+    self._playlist_id = extract.playlist_id(self._input_url)
+                        ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/pytubefix/extract.py", line 163, in playlist_id
+    return parse_qs(parsed.query)['list'][0]
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'list'
+2026-05-14 12:54:35 | ERROR    | app.core.exceptions | Unhandled exception | path=http://localhost:8000/search?q=java+learncode&page=1
+Traceback (most recent call last):
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 112, in _yt_to_result
+    url = yt_obj.watch_url
+          ^^^^^^^^^^^^^^^^
+AttributeError: 'Channel' object has no attribute 'watch_url'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib64/python3.14/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/middleware/logging_middleware.py", line 17, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/routers/search.py", line 47, in search
+    return search_youtube(
+        query=q,
+    ...<4 lines>...
+        page=page,
+    )
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 211, in search_youtube
+    channels = [_yt_to_result(c, "channel") for c in s.channel]
+                ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 114, in _yt_to_result
+    url = getattr(yt_obj, "playlist_url", getattr(yt_obj, "channel_url", ""))
+  File "/home/hara/.local/lib/python3.14/site-packages/pytubefix/contrib/playlist.py", line 96, in playlist_url
+    return f"https://www.youtube.com/playlist?list={self.playlist_id}"
+                                                    ^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/pytubefix/contrib/playlist.py", line 87, in playlist_id
+    self._playlist_id = extract.playlist_id(self._input_url)
+                        ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/pytubefix/extract.py", line 163, in playlist_id
+    return parse_qs(parsed.query)['list'][0]
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'list'
+2026-05-14 12:54:39 | ERROR    | app.core.exceptions | Unhandled exception | path=http://localhost:8000/search?q=java+learncode&page=1
+Traceback (most recent call last):
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 112, in _yt_to_result
+    url = yt_obj.watch_url
+          ^^^^^^^^^^^^^^^^
+AttributeError: 'Channel' object has no attribute 'watch_url'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 191, in __call__
+    with recv_stream, send_stream, collapse_excgroups():
+                                   ~~~~~~~~~~~~~~~~~~^^
+  File "/usr/lib64/python3.14/contextlib.py", line 162, in __exit__
+    self.gen.throw(value)
+    ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_utils.py", line 87, in collapse_excgroups
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 193, in __call__
+    response = await self.dispatch_func(request, call_next)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/middleware/logging_middleware.py", line 17, in dispatch
+    response = await call_next(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 168, in call_next
+    raise app_exc from app_exc.__cause__ or app_exc.__context__
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/base.py", line 144, in coro
+    await self.app(scope, receive_or_disconnect, send_no_error)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/home/hara/.local/lib/python3.14/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 120, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 674, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/home/hara/.local/lib/python3.14/site-packages/fastapi/routing.py", line 328, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/routers/search.py", line 47, in search
+    return search_youtube(
+        query=q,
+    ...<4 lines>...
+        page=page,
+    )
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 211, in search_youtube
+    channels = [_yt_to_result(c, "channel") for c in s.channel]
+                ~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/hara/Desktop/python/ytapi/app/services/playlist_service.py", line 114, in _yt_to_result
+    url = getattr(yt_obj, "playlist_url", getattr(yt_obj, "channel_url", ""))
+  File "/home/hara/.local/lib/python3.14/site-packages/pytubefix/contrib/playlist.py", line 96, in playlist_url
+    return f"https://www.youtube.com/playlist?list={self.playlist_id}"
+                                                    ^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/pytubefix/contrib/playlist.py", line 87, in playlist_id
+    self._playlist_id = extract.playlist_id(self._input_url)
+                        ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/hara/.local/lib/python3.14/site-packages/pytubefix/extract.py", line 163, in playlist_id
+    return parse_qs(parsed.query)['list'][0]
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+KeyError: 'list'
+2026-05-14 12:56:05 | INFO     | ytapi.access | GET /search → 200  (7341.9 ms)
+2026-05-14 12:56:20 | INFO     | ytapi.access | GET /search → 200  (5416.5 ms)
+2026-05-14 13:02:13 | INFO     | ytapi.access | GET /search → 200  (6216.8 ms)
+2026-05-14 13:03:15 | INFO     | ytapi.access | GET /search → 200  (6385.4 ms)
+2026-05-14 13:03:31 | INFO     | ytapi.access | GET /search → 200  (5470.7 ms)
+2026-05-14 13:03:37 | INFO     | ytapi.access | GET /search → 200  (5936.7 ms)
+2026-05-14 13:03:43 | INFO     | ytapi.access | GET /search → 200  (5482.4 ms)
+2026-05-14 13:03:49 | INFO     | ytapi.access | GET /search → 200  (6136.8 ms)
+2026-05-14 13:03:56 | INFO     | ytapi.access | POST /merge/start → 200  (729.3 ms)
+2026-05-14 13:03:56 | INFO     | ytapi.access | GET /merge/progress/cfee773cc144 → 200  (1.4 ms)
+2026-05-14 13:04:25 | INFO     | ytapi.access | OPTIONS /merge/job/cfee773cc144 → 200  (0.1 ms)
+2026-05-14 13:04:25 | INFO     | ytapi.access | DELETE /merge/job/cfee773cc144 → 200  (0.5 ms)
+2026-05-14 13:13:30 | INFO     | ytapi.access | GET /video/info → 200  (8964.4 ms)
+2026-05-14 13:13:30 | INFO     | ytapi.access | GET /video/streams → 200  (8964.4 ms)
+2026-05-14 13:25:50 | ERROR    | app.services.download_service | Job cfee773cc144 failed: Audio download: The read operation timed out; Video download: The read operation timed out
+Traceback (most recent call last):
+  File "/home/hara/Desktop/python/ytapi/app/services/download_service.py", line 329, in _run_pipeline
+    raise RuntimeError("; ".join(errors))
+RuntimeError: Audio download: The read operation timed out; Video download: The read operation timed out
+2026-05-14 14:04:30 | INFO     | ytapi.access | GET /video/info → 200  (6971.2 ms)
+2026-05-14 14:04:30 | INFO     | ytapi.access | GET /video/streams → 200  (6970.8 ms)
+2026-05-14 14:04:45 | INFO     | ytapi.access | POST /merge/start → 200  (1016.8 ms)
+2026-05-14 14:04:45 | INFO     | ytapi.access | GET /merge/progress/21c276f933f5 → 200  (1.2 ms)
+2026-05-14 14:04:45 | INFO     | app.services.download_service | Single-thread download: 10672531 bytes
+2026-05-14 14:04:45 | INFO     | app.services.download_service | Single-thread download: 972997 bytes
+2026-05-14 14:05:24 | INFO     | ytapi.access | GET /merge/file/21c276f933f5 → 200  (1.7 ms)
