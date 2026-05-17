@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Heroku Python buildpack post_compile hook — downloads static ffmpeg
+# Runs from the build directory (sourced by the Python buildpack).
+set -e
+
+echo "-----> Downloading static ffmpeg (amd64)"
+
+FFMPEG_URL="https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
+TMP_DIR=$(mktemp -d)
+curl -sL "$FFMPEG_URL" -o "$TMP_DIR/ffmpeg.tar.xz"
+tar xf "$TMP_DIR/ffmpeg.tar.xz" -C "$TMP_DIR"
+
+# The tar extracts to a directory like ffmpeg-7.1.1-amd64-static
+BIN_DIR=$(find "$TMP_DIR" -name ffmpeg -type f -printf '%h\n' | head -1)
+
+mkdir -p .heroku/ffmpeg
+cp "$BIN_DIR/ffmpeg"  .heroku/ffmpeg/ffmpeg
+cp "$BIN_DIR/ffprobe" .heroku/ffmpeg/ffprobe
+chmod +x .heroku/ffmpeg/ffmpeg .heroku/ffmpeg/ffprobe
+
+rm -rf "$TMP_DIR"
+echo "-----> Static ffmpeg installed to .heroku/ffmpeg/"

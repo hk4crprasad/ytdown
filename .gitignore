@@ -1,7 +1,29 @@
-node_modules
-py
-__pycache__
-venv
-dist
+### Node ###
+node_modules/
+New/.next/
+New/out/
+
+### Python ###
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+
+### Heroku build outputs ###
+frontend/            # built by bin/build-frontend.sh — never commit this
+.heroku/ffmpeg/      # downloaded by bin/post_compile
+
+### Runtime data ###
+ytapi/downloads/
+ytapi/temp/
+ytapi/logs/
+ytapi/token_backups/
 tokens.json
-*egg-info
+tockens.json
+
+### Misc ###
+py/
+.env
+.env.local
