@@ -1,22 +1,81 @@
 #!/usr/bin/env bash
-# Heroku Python buildpack post_compile hook — downloads static ffmpeg
-# Runs from the build directory (sourced by the Python buildpack).
-set -e
+# bin/post_compile
+# Heroku Python buildpack post_compile hook.
+# Runs from the APP/BUILD directory after pip install.
+#
+# Does two things:
+#   1. Downloads Node.js, builds the Next.js frontend, copies standalone output
+#   2. Downloads the static ffmpeg binary
+#
+# Only the Python buildpack is needed — no multi-buildpack juggling.
+
+set -eo pipefail
+
+BUILD_DIR="$(pwd)"
+FRONTEND_SRC="$BUILD_DIR/New"
+FRONTEND_DEST="$BUILD_DIR/frontend"
+
+# ── 1. Node.js ───────────────────────────────────────────────────────────────
+NODE_VERSION="22.15.0"
+NODE_DIST="node-v${NODE_VERSION}-linux-x64"
+NODE_URL="https://nodejs.org/dist/v${NODE_VERSION}/${NODE_DIST}.tar.xz"
+NODE_TMP=$(mktemp -d)
+
+echo "-----> Installing Node.js v${NODE_VERSION}"
+curl -sL "$NODE_URL" -o "$NODE_TMP/node.tar.xz"
+tar -xJf "$NODE_TMP/node.tar.xz" -C "$NODE_TMP"
+export PATH="$NODE_TMP/$NODE_DIST/bin:$PATH"
+
+node --version
+npm  --version
+
+# ── 2. Build Next.js frontend ────────────────────────────────────────────────
+echo "-----> Building Next.js frontend (output: standalone)"
+
+cd "$FRONTEND_SRC"
+
+# Clean install — use npm install, not npm ci, to handle missing lock file
+npm install --prefer-offline 2>/dev/null || npm install
+
+npm run build
+
+echo "-----> Copying standalone output → $FRONTEND_DEST"
+mkdir -p "$FRONTEND_DEST"
+
+# Minimal Node server + node_modules from standalone
+cp -r .next/standalone/. "$FRONTEND_DEST/"
+
+# _next/static (JS chunks, CSS) — must live at <standalone>/.next/static
+mkdir -p "$FRONTEND_DEST/.next"
+cp -r .next/static "$FRONTEND_DEST/.next/static"
+
+# public/ (favicon, images, etc.)
+if [ -d public ]; then
+    cp -r public "$FRONTEND_DEST/public"
+fi
+
+echo "-----> Frontend build complete"
+
+# ── 3. Static ffmpeg ─────────────────────────────────────────────────────────
+cd "$BUILD_DIR"
 
 echo "-----> Downloading static ffmpeg (amd64)"
 
 FFMPEG_URL="https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz"
-TMP_DIR=$(mktemp -d)
-curl -sL "$FFMPEG_URL" -o "$TMP_DIR/ffmpeg.tar.xz"
-tar xf "$TMP_DIR/ffmpeg.tar.xz" -C "$TMP_DIR"
+FFMPEG_TMP=$(mktemp -d)
 
-# The tar extracts to a directory like ffmpeg-7.1.1-amd64-static
-BIN_DIR=$(find "$TMP_DIR" -name ffmpeg -type f -printf '%h\n' | head -1)
+curl -sL "$FFMPEG_URL" -o "$FFMPEG_TMP/ffmpeg.tar.xz"
+tar xf "$FFMPEG_TMP/ffmpeg.tar.xz" -C "$FFMPEG_TMP"
+
+# The tar extracts to a versioned dir like ffmpeg-7.x-amd64-static
+BIN_DIR=$(find "$FFMPEG_TMP" -name ffmpeg -type f -printf '%h\n' | head -1)
 
 mkdir -p .heroku/ffmpeg
 cp "$BIN_DIR/ffmpeg"  .heroku/ffmpeg/ffmpeg
 cp "$BIN_DIR/ffprobe" .heroku/ffmpeg/ffprobe
 chmod +x .heroku/ffmpeg/ffmpeg .heroku/ffmpeg/ffprobe
 
-rm -rf "$TMP_DIR"
+rm -rf "$FFMPEG_TMP" "$NODE_TMP"
+
 echo "-----> Static ffmpeg installed to .heroku/ffmpeg/"
+echo "-----> post_compile done ✓"
