@@ -21,6 +21,7 @@ ytapi/temp/
 ytapi/logs/
 ytapi/token_backups/
 tokens.json
+!ytapi/tokens.json
 tockens.json
 
 ### Misc ###
