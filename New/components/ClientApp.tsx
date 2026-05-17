@@ -63,7 +63,9 @@ export default function ClientApp() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDark, setIsDark]     = useState(true);
   const inputRef                = useRef<HTMLInputElement>(null);
-  const { containerRef: turnstileRef, getToken, reset: resetTurnstile } = useTurnstile();
+  // useTurnstile registers getToken into fetchApi automatically — all API
+  // calls in any component get the Turnstile token without extra code.
+  const { containerRef: turnstileRef } = useTurnstile();
 
   const goHome = () => { setQuery(''); setView({ kind: 'home' }); setMobileMenuOpen(false); };
 
@@ -76,11 +78,9 @@ export default function ClientApp() {
   const runSearch = async (q: string) => {
     setLoading(true);
     try {
-      const token = await getToken();
-      const res = await fetchApi(`/search?q=${encodeURIComponent(q)}`, {}, token);
+      const res = await fetchApi(`/search?q=${encodeURIComponent(q)}`);
       setView({ kind: 'search', query: q, results: res });
     } catch (err: any) {
-      resetTurnstile();
       toast.error('Search failed', { description: err.message });
     } finally { setLoading(false); }
   };
@@ -93,9 +93,6 @@ export default function ClientApp() {
     if (kind === 'video')         setView({ kind: 'video', url: q });
     else if (kind === 'playlist') setView({ kind: 'playlist', url: q });
     else                          await runSearch(q);
-    // Token is single-use — reset after each submission so the next
-    // challenge starts immediately and a fresh token is ready.
-    resetTurnstile();
   };
 
   const pasteFromClipboard = async () => {

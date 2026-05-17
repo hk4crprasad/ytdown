@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { registerTokenGetter } from './api';
 
 declare global {
   interface Window {
@@ -21,7 +22,6 @@ const SCRIPT_ID = 'cf-turnstile-script';
 function loadTurnstileScript(): Promise<void> {
   return new Promise((resolve) => {
     if (document.getElementById(SCRIPT_ID)) {
-      // Already injected — wait for it to be ready
       if (window.turnstile) { resolve(); return; }
       window.onTurnstileLoad = resolve;
       return;
@@ -40,10 +40,11 @@ function loadTurnstileScript(): Promise<void> {
 /**
  * useTurnstile — invisible Cloudflare Turnstile hook.
  *
- * Returns:
- *   - `containerRef` — attach to a hidden <div> in your component
- *   - `getToken()`   — call before any protected API request; resolves with the token
- *   - `reset()`      — call after a failed/used token to get a fresh one
+ * Mount this ONCE at the root (ClientApp). It:
+ *   - Renders an invisible widget in the provided `containerRef` div
+ *   - Registers its `getToken` into the `fetchApi` module so ALL API calls
+ *     anywhere in the app automatically get the Turnstile token attached —
+ *     no prop drilling needed.
  */
 export function useTurnstile() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,16 +59,30 @@ export function useTurnstile() {
     resolversRef.current = [];
   }, []);
 
+  /** Returns the current valid token, waiting for the challenge if needed. */
+  const getToken = useCallback((): Promise<string> => {
+    if (!SITE_KEY) return Promise.resolve('');           // dev: no key = skip
+    if (tokenRef.current) return Promise.resolve(tokenRef.current);
+    return new Promise((resolve) => { resolversRef.current.push(resolve); });
+  }, []);
+
+  const reset = useCallback(() => {
+    tokenRef.current = null;
+    if (widgetIdRef.current && window.turnstile) {
+      window.turnstile.reset(widgetIdRef.current);
+    }
+  }, []);
+
   useEffect(() => {
     if (!SITE_KEY || !containerRef.current) return;
 
     loadTurnstileScript().then(() => {
       if (!window.turnstile || !containerRef.current) return;
       widgetIdRef.current = window.turnstile.render(containerRef.current, {
-        sitekey:  SITE_KEY,
-        callback: onSuccess,
-        theme:    'dark',
-        size:     'invisible',   // no UI at all
+        sitekey:          SITE_KEY,
+        callback:         onSuccess,
+        theme:            'dark',
+        size:             'invisible',
         'refresh-expired': 'auto',
       });
       setReady(true);
@@ -81,24 +96,11 @@ export function useTurnstile() {
     };
   }, [onSuccess]);
 
-  /** Returns the current token, waiting for the challenge to complete if needed. */
-  const getToken = useCallback((): Promise<string> => {
-    // No site key configured — return empty string (dev mode / turnstile disabled)
-    if (!SITE_KEY) return Promise.resolve('');
-
-    if (tokenRef.current) return Promise.resolve(tokenRef.current);
-
-    return new Promise((resolve) => {
-      resolversRef.current.push(resolve);
-    });
-  }, []);
-
-  const reset = useCallback(() => {
-    tokenRef.current = null;
-    if (widgetIdRef.current && window.turnstile) {
-      window.turnstile.reset(widgetIdRef.current);
-    }
-  }, []);
+  // Register getToken into fetchApi so every API call gets the token for free.
+  useEffect(() => {
+    registerTokenGetter(getToken);
+    return () => registerTokenGetter(null);   // cleanup on unmount
+  }, [getToken]);
 
   return { containerRef, getToken, reset, ready };
 }
