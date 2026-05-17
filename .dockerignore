@@ -1,0 +1,29 @@
+# ── Git / VCS ────────────────────────────────────────
+.git
+.gitignore
+
+# ── Python artifacts ─────────────────────────────────
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+ytapi/.venv
+ytapi/.env
+
+# ── Node / Next.js ───────────────────────────────────
+New/node_modules
+New/.next
+New/.env
+New/.env.local
+
+# ── Runtime data (mounted as volumes) ────────────────
+ytapi/downloads
+ytapi/temp
+ytapi/logs
+ytapi/token_backups
+ytapi/tokens.json
+
+# ── Misc ─────────────────────────────────────────────
+*.md
+py/
+test.py
+tockens.json

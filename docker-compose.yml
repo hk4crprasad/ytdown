@@ -1,0 +1,30 @@
+version: "3.9"
+
+services:
+  ytapi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ytapi:latest
+    container_name: ytapi
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount tokens read-only (sensitive credential file)
+      - ./ytapi/tokens.json:/app/tokens.json:ro
+      # Persist download, log, and backup directories
+      - ./ytapi/downloads:/app/downloads
+      - ./ytapi/logs:/app/logs
+      - ./ytapi/token_backups:/app/token_backups
+    environment:
+      - TOKEN_FILE=/app/tokens.json
+      - LOG_LEVEL=INFO
+      - DEBUG=false
+      - CORS_ORIGINS=["*"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s

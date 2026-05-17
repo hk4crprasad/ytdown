@@ -1,0 +1,4 @@
+# Root requirements.txt — delegates to ytapi/requirements.txt
+# The Heroku Python buildpack installs from this file at /app/requirements.txt
+# Relative paths resolve correctly because pip is run from /app/.
+-r ytapi/requirements.txt
