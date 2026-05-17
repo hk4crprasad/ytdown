@@ -12,8 +12,11 @@ from fastapi.staticfiles import StaticFiles
 from app.core.config import settings
 from app.core.exceptions import register_handlers
 from app.core.logging_config import setup_logging
+# Bootstrap OAuth tokens from TOKENS_JSON env var BEFORE any pytubefix import
+import app.core.token_bootstrap  # noqa: F401  — side-effect import
 from app.middleware.logging_middleware import RequestLoggingMiddleware
 from app.routers import audio, captions, health, merge, playlist, search, shorts, token, video
+
 
 # Resolve the directory where the Next.js standalone server.js lives.
 # In Docker this is /app/frontend; locally it may not exist (dev uses `npm run dev`).
