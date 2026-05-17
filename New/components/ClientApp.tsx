@@ -9,6 +9,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { fetchApi } from '../lib/api';
 import { detectUrlType } from '../lib/format';
+import { useTurnstile } from '../lib/turnstile';
 import { toast } from 'sonner';
 import VideoDetails from './VideoDetails';
 import ActiveJobs, { JobsProvider } from './ActiveJobs';
@@ -62,6 +63,7 @@ export default function ClientApp() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isDark, setIsDark]     = useState(true);
   const inputRef                = useRef<HTMLInputElement>(null);
+  const { containerRef: turnstileRef, getToken, reset: resetTurnstile } = useTurnstile();
 
   const goHome = () => { setQuery(''); setView({ kind: 'home' }); setMobileMenuOpen(false); };
 
@@ -74,9 +76,11 @@ export default function ClientApp() {
   const runSearch = async (q: string) => {
     setLoading(true);
     try {
-      const res = await fetchApi(`/search?q=${encodeURIComponent(q)}`);
+      const token = await getToken();
+      const res = await fetchApi(`/search?q=${encodeURIComponent(q)}`, {}, token);
       setView({ kind: 'search', query: q, results: res });
     } catch (err: any) {
+      resetTurnstile();
       toast.error('Search failed', { description: err.message });
     } finally { setLoading(false); }
   };
@@ -89,6 +93,9 @@ export default function ClientApp() {
     if (kind === 'video')         setView({ kind: 'video', url: q });
     else if (kind === 'playlist') setView({ kind: 'playlist', url: q });
     else                          await runSearch(q);
+    // Token is single-use — reset after each submission so the next
+    // challenge starts immediately and a fresh token is ready.
+    resetTurnstile();
   };
 
   const pasteFromClipboard = async () => {
@@ -130,6 +137,8 @@ export default function ClientApp() {
 
   return (
     <JobsProvider>
+      {/* Hidden Turnstile widget container — invisible mode, no UI shown */}
+      <div ref={turnstileRef} style={{ display: 'none' }} aria-hidden="true" />
       <div className="flex flex-col min-h-screen">
 
         {/* ── Top Navbar ── */}

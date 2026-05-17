@@ -8,10 +8,12 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query
 
 from app.core.dependencies import get_token_file
+from app.middleware.turnstile import verify_turnstile
 from app.schemas.schemas import SearchResponse
 from app.services.playlist_service import search_youtube
 
-router = APIRouter(tags=["Search"])
+router = APIRouter(tags=["Search"], dependencies=[Depends(verify_turnstile)])
+
 
 
 @router.get(

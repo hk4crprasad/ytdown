@@ -19,6 +19,7 @@ from fastapi.responses import StreamingResponse
 
 from app.core.config import settings
 from app.core.dependencies import get_token_file
+from app.middleware.turnstile import verify_turnstile
 from app.schemas.schemas import (
     StreamInfo, StreamsResponse, ThumbnailsResponse, VideoInfoResponse,
 )
@@ -28,7 +29,7 @@ from app.services.youtube_service import (
 )
 
 logger = logging.getLogger(__name__)
-router = APIRouter(tags=["Video"])
+router = APIRouter(tags=["Video"], dependencies=[Depends(verify_turnstile)])
 
 
 # ---------------------------------------------------------------------------
